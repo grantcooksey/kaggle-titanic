@@ -30,6 +30,12 @@ def logistic_regression_feature_processing(train, test):
 
 
 def decision_tree_preprocessing(data, target, categorical_features=None, numerical_features=None, drop_na_columns=None):
+    """Preprocesses the data
+
+    Note:
+        Assumes the target column has binary values for the training set and Nan for
+        the test set.
+    """
     if categorical_features is None:
         categorical_features = []
     if numerical_features is None:
@@ -37,16 +43,15 @@ def decision_tree_preprocessing(data, target, categorical_features=None, numeric
     if drop_na_columns is None:
         drop_na_columns = []
 
-    full_features = categorical_features + numerical_features
+    full_features = categorical_features + numerical_features + list(target)
     df = data[full_features]
-    y = data[target]
 
     # Drop columns with nulls
     for col in drop_na_columns:
         df_free = df.dropna(subset=[col])
-        only_na = df[~df.index.isin(df_free.index)]
+        #only_na = df[~df.index.isin(df_free.index)]
         df = df_free
-        y = y.drop(only_na.index)
+        #y = y.drop(only_na.index)
 
     # Impute data using median
     imp = preprocessing.Imputer(missing_values='NaN', strategy='median', axis=0)
@@ -55,4 +60,4 @@ def decision_tree_preprocessing(data, target, categorical_features=None, numeric
     # Transform categorical data into numerical labels
     df[categorical_features] = df[categorical_features].apply(preprocessing.LabelEncoder().fit_transform)
 
-    return df, y
+    return df
