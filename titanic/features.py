@@ -43,7 +43,7 @@ def decision_tree_preprocessing(data, target, categorical_features=None, numeric
     if drop_na_columns is None:
         drop_na_columns = []
 
-    full_features = categorical_features + numerical_features + list(target)
+    full_features = categorical_features + numerical_features + [target]
     df = data[full_features]
 
     # Drop columns with nulls
